@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deteccion de emociones</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <!-- Añadir CSS local -->
+    <link rel="stylesheet" href="/static/css/styles.css" />
+
+    <!-- Añadir Bootstrap JS y dependencias desde CDN -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mt-5">Detección de Emociones en Imágenes</h1>
+      <form id="uploadForm" class="mt-4" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="imageInput">Cargar una imagen</label>
+          <input type="file" class="form-control-file" id="imageInput" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Predecir Emoción</button>
+      </form>
+      <div id="result" class="mt-4"></div>
+    </div>
+    <script src="/estático/js/scripts.js"></script>
+  </body>
+</html>
