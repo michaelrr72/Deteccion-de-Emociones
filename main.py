@@ -27,10 +27,9 @@ class ImagePredictionResponse(BaseModel):
     prediction: str
 
 def preprocess_image(image: Image.Image) -> np.ndarray:
-    # Aquí puedes ajustar el tamaño de la imagen y hacer la normalización necesaria para tu modelo
-    image = image.resize((224, 224))  # Ajusta según el tamaño de entrada de tu modelo
+    image = image.resize((224, 224))  
     image_array = np.array(image) / 255.0  # Normaliza los valores de píxel
-    image_array = np.expand_dims(image_array, axis=0)  # Añade una dimensión para el batch
+    image_array = np.expand_dims(image_array, axis=0)
     return image_array
 
 @app.post("/predecir-imagen", response_model=ImagePredictionResponse)
@@ -41,10 +40,10 @@ async def predict_image(file: UploadFile = File(...)):
     
     # Realiza la predicción
     prediction = modelo_cargado.predict(processed_image)
-    emotion = np.argmax(prediction)  # Esto depende de cómo tu modelo devuelve la predicción
+    emotion = np.argmax(prediction)  
 
-    # Mapea el índice a la emoción correspondiente
-    emotion_labels = ["feliz", "triste", "enojado", "sorprendido"]  # Ajusta según tu modelo
+    # Emoción correspondiente
+    emotion_labels = ["disgustado", "enojado", "feliz","neutral","sorprendido", "temeroso" ,"triste"]
     predicted_emotion = emotion_labels[emotion]
 
     return ImagePredictionResponse(prediction=predicted_emotion)
