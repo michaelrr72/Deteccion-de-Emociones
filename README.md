@@ -12,7 +12,7 @@ Este proyecto proporciona una API basada en FastAPI para la detección de emocio
 1. Clona este repositorio en tu máquina local:
 
     ```bash
-    git clone https://github.com/tu-usuario/emotion-detection-api.git
+    git clone https://github.com/michaelrr72/emotion-detection-api.git
     cd emotion-detection-api
     ```
 
