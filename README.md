@@ -16,14 +16,7 @@ Este proyecto proporciona una API basada en FastAPI para la detección de emocio
     cd emotion-detection-api
     ```
 
-2. Crea y activa un entorno virtual:
-
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
-    ```
-
-3. Instala las dependencias necesarias:
+2. Instala las dependencias necesarias:
 
     ```bash
     pip install fastapi uvicorn transformers tensorflow tensorflow-hub pillow numpy
