@@ -1,14 +1,18 @@
+import tensorflow as tf
+import tensorflow_hub as hub
+from tensorflow.keras.models import load_model
 from typing import Union
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from transformers import pipeline
 from pydantic import BaseModel
 from PIL import Image
 import io
 import numpy as np
-from deepface import DeepFace
+
+with tf.keras.utils.custom_object_scope({'KerasLayer': hub.KerasLayer}):
+    modelo_cargado = load_model('mm/modelo_entrenado.h5')
 
 app = FastAPI()
 
@@ -19,37 +23,28 @@ templates = Jinja2Templates(directory="templates")
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# Cargar el modelo de analisis de sentimientos
-clasificador = pipeline(
-    "sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment"
-)
-
-# Solo recibe 250 car
-
-
-@app.get("/analizar")
-def analizar_sentimiento_hf(texto: str):
-    resultado = clasificador(texto)
-    return {
-        "texto": texto,
-        "label": resultado[0]["label"],
-        "score": resultado[0]["score"],
-    }
-
-
 class ImagePredictionResponse(BaseModel):
     prediction: str
+
+def preprocess_image(image: Image.Image) -> np.ndarray:
+    # Aquí puedes ajustar el tamaño de la imagen y hacer la normalización necesaria para tu modelo
+    image = image.resize((224, 224))  # Ajusta según el tamaño de entrada de tu modelo
+    image_array = np.array(image) / 255.0  # Normaliza los valores de píxel
+    image_array = np.expand_dims(image_array, axis=0)  # Añade una dimensión para el batch
+    return image_array
 
 @app.post("/predecir-imagen", response_model=ImagePredictionResponse)
 async def predict_image(file: UploadFile = File(...)):
     contents = await file.read()
     image = Image.open(io.BytesIO(contents)).convert("RGB")
-    open_cv_image = np.array(image)
-    open_cv_image = open_cv_image[:, :, ::-1].copy()
+    processed_image = preprocess_image(image)
+    
+    # Realiza la predicción
+    prediction = modelo_cargado.predict(processed_image)
+    emotion = np.argmax(prediction)  # Esto depende de cómo tu modelo devuelve la predicción
 
-    # Realizar la predicción de emociones
-    result = DeepFace.analyze(open_cv_image, actions=['emotion'])
+    # Mapea el índice a la emoción correspondiente
+    emotion_labels = ["feliz", "triste", "enojado", "sorprendido"]  # Ajusta según tu modelo
+    predicted_emotion = emotion_labels[emotion]
 
-    # Obtener la emoción principal
-    emotion = result["dominant_emotion"]
-    return ImagePredictionResponse(prediction=emotion)
+    return ImagePredictionResponse(prediction=predicted_emotion)
