@@ -1,6 +1,5 @@
-$(document).ready(function() {
-    // Funcion de cargar archivo
-    $("#uploadForm").on("submit", function(event) {
+$(document).ready(function () {
+    $("#uploadForm").on("submit", function (event) {
         event.preventDefault();
 
         var formData = new FormData();
@@ -13,8 +12,11 @@ $(document).ready(function() {
             data: formData,
             processData: false,
             contentType: false,
-            success: function(response) {
-                $("#result").html(`<p>Emoción Predicha: ${response.prediction}</p>`);
+            success: function (response) {
+                $("#result").html(`<p>Predicted Emotion: ${response.prediction}</p>`);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Error:", textStatus, errorThrown);
             }
         });
     });
