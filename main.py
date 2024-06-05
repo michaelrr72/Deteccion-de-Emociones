@@ -26,8 +26,6 @@ async def read_root(request: Request):
 
 # Cargar el modelo
 with tf.keras.utils.custom_object_scope({"KerasLayer": hub.KerasLayer}):
-    # modelo_cargado = tf.keras.models.load_model("mm/modelo_entrenado.h5")
-    # modelo_cargado = tf.keras.models.load_model('mm/modelo_entrenado.h5', custom_objects={'KerasLayer': hub.KerasLayer})
     modelo_cargado = load_model("mm/modelo_entrenado.h5")
 
 
