@@ -1,6 +1,3 @@
-import tensorflow as tf
-import tensorflow_hub as hub
-from tensorflow.keras.models import load_model
 from typing import Union
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import HTMLResponse
@@ -12,6 +9,10 @@ import requests
 from io import BytesIO
 import cv2
 import numpy as np
+import tensorflow as tf
+import tensorflow_hub as hub
+import tf_keras as tfk
+from tensorflow.keras.models import load_model
 
 app = FastAPI()
 
@@ -25,8 +26,8 @@ async def read_root(request: Request):
 
 
 # Cargar el modelo
-with tf.keras.utils.custom_object_scope({"KerasLayer": hub.KerasLayer}):
-    modelo_cargado = load_model("mm/modelo_entrenado.h5")
+#with tf.keras.utils.custom_object_scope({'KerasLayer': hub.KerasLayer}):
+    modelo_cargado = load_model('mm/modelo_entrenado.h5')
 
 
 class ImagePredictionResponse(BaseModel):
